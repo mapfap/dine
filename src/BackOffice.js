@@ -29,35 +29,35 @@ class BackOffice extends Component {
     let that = this;
     let dbOrders = [];
     this.db.collection("orders").get()
-      .then(function (querySnapshot) {
-        querySnapshot.forEach(function (order) {
-          let orderItems = [];
-          that.db.collection("orders").doc(order.id).collection("items").get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (item) {
-              orderItems.push({
-                id: item.id,
-                name: item.data().name,
-                quantity: item.data().quantity
-              })
-            });
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (order) {
+        // let orderItems = [];
+        // that.db.collection("orders").doc(order.id).collection("items").get()
+        // .then(function (querySnapshot) {
+        //   querySnapshot.forEach(function (item) {
+        //     orderItems.push({
+        //       id: item.id,
+        //       name: item.data().name,
+        //       quantity: item.data().quantity
+        //     })
+        //   });
 
-            dbOrders.push({
-              id: order.id,
-              createdAt: order.data().createdAt.toString(),
-              items: orderItems
-            })
-            that.setState({
-              orders: dbOrders
-            });
-          });
+        dbOrders.push({
+          id: order.id,
+          createdAt: order.data().createdAt.toString(),
+          items: order.data().items
         });
-
-        // console.log(that.state.orders);
-      })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
       });
+      
+      that.setState({
+        orders: dbOrders
+      });
+
+      // console.log(that.state.orders);
+    })
+    .catch(function (error) {
+      console.log("Error getting documents: ", error);
+    });
   }
 
   render() {

@@ -19,3 +19,16 @@ h1, h2, h3 {
   text-align: center;
   font-size: 0.9em;
 }
+
+.confirm-order-button {
+  background: #4fc54f;
+  color: #ffffff;
+  display: inline-block;
+  padding: 5px 15px;
+  /* border: 1px solid #4cae4c; */
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  /* border-radius: 4px; */
+}

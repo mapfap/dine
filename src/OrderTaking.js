@@ -7,6 +7,7 @@ import BackOffice from './BackOffice'
 import config from './Config/config.js';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import swal from 'sweetalert2'
 
 
 class OrderTaking extends Component {
@@ -25,6 +26,35 @@ class OrderTaking extends Component {
 
     this.getMenus = this.getMenus.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.handleConfirmOrder = this.handleConfirmOrder.bind(this);
+  }
+
+  handleConfirmOrder() {
+    let that = this;
+    this.db.collection("orders").doc().set({
+      createdAt: new Date(),
+      items: this.state.order
+    })
+    .then(function () {
+      swal(
+        'สั่งอาการเรียบร้อย',
+        '',
+        'success'
+      );
+      that.setState({
+        order: []
+      });
+    })
+    .catch(function (error) {
+      swal(
+        'บางอย่างผิดพลาด',
+        'โปรดลองอีกครั้ง',
+        'error'
+      );
+      console.log(error);
+    });
+
+
   }
 
   addToOrder(orderItem) {
@@ -38,7 +68,6 @@ class OrderTaking extends Component {
         break;
       }
     }
-
 
     if (!foundItem) {
       currentOrder.push(orderItem);
@@ -84,12 +113,13 @@ class OrderTaking extends Component {
           })}
         </div>
         <div className="order-wrapper">
+          
           <h3>อาหารที่สั่ง</h3>
           {this.state.order.map(orderItem => {
             return (<OrderItem orderItemName={orderItem.name} orderItemId={orderItem.id} key={orderItem.id} orderItemQuantity={orderItem.quantity} />);
           })}
           {
-            (this.state.order.length === 0) ? (<div className="empty-list">ยังไม่มีรายการอาหารที่สั่ง</div>) : ""
+            (this.state.order.length === 0) ? (<div className="empty-list">ยังไม่มีรายการอาหารที่สั่ง</div>) : (<div onClick={this.handleConfirmOrder} className="confirm-order-button">ส่งรายการ</div>)
           }
         </div>
       </div>

@@ -24,7 +24,7 @@ class Item extends Component {
     return (
       <div className="backoffice-order-item-container">
         <div className="backoffice-order-item-name">
-          {this.orderItemName} x {this.state.quantity}
+          {this.orderItemName} x {this.state.quantity || 0}
         </div>
       </div>
     )

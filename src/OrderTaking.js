@@ -37,13 +37,14 @@ class OrderTaking extends Component {
     })
     .then(function () {
       swal(
-        'สั่งอาการเรียบร้อย',
+        'สั่งอาหารเรียบร้อย',
         '',
         'success'
       );
       that.setState({
         order: []
       });
+      
     })
     .catch(function (error) {
       swal(

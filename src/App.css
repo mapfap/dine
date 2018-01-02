@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Kanit');
+
+body {
+  font-family: 'Kanit', sans-serif;
+  background: #ffffff;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+.menus-wrapper {
+  text-align: center;
+}
+
+.order-wrapper {
+  position: fixed;
+  bottom: 0px;
+  background: #444444;
+  color: white;
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+.empty-list {
+  text-align: center;
+  font-size: 0.9em;
+}

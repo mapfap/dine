@@ -8,7 +8,7 @@ import config from './Config/config.js';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import swal from 'sweetalert2'
-
+import Spinner from 'react-spinkit';
 
 class OrderTaking extends Component {
 
@@ -21,7 +21,9 @@ class OrderTaking extends Component {
 
     this.state = {
       menus: [],
-      order: []
+      order: [],
+      forceHideConfirmButton: false,
+      isLoading: true
     };
 
     this.getMenus = this.getMenus.bind(this);
@@ -30,6 +32,11 @@ class OrderTaking extends Component {
   }
 
   handleConfirmOrder() {
+    this.setState({
+      forceHideConfirmButton: true,
+      isLoading: true
+    });
+
     let that = this;
     this.db.collection("orders").doc().set({
       createdAt: new Date(),
@@ -42,7 +49,8 @@ class OrderTaking extends Component {
         'success'
       );
       that.setState({
-        order: []
+        order: [],
+        isLoading: false
       });
       
     })
@@ -53,6 +61,9 @@ class OrderTaking extends Component {
         'error'
       );
       console.log(error);
+      this.setState({
+        isLoading: false
+      });
     });
 
 
@@ -96,17 +107,25 @@ class OrderTaking extends Component {
         });
 
         that.setState({
-          menus: dbMenus
+          menus: dbMenus,
+          isLoading: false
         });
+
       })
       .catch(function (error) {
-        console.log("Error getting documents: ", error);
+        swal(
+          'บางอย่างผิดพลาด',
+          'โปรดลองอีกครั้ง',
+          'error'
+        );
+        console.log(error);
       });
   }
 
   render() {
     return (
       <div className="menus-container">
+        {this.state.isLoading && <Spinner className='spinner' name='ball-pulse-sync' />}
         <h1>สั่งอาหาร</h1>
         <div className="menus-wrapper">
           {this.state.menus.map(menu => {
@@ -120,7 +139,7 @@ class OrderTaking extends Component {
             return (<OrderItem orderItemName={orderItem.name} orderItemId={orderItem.id} key={orderItem.id} orderItemQuantity={orderItem.quantity} />);
           })}
           {
-            (this.state.order.length === 0) ? (<div className="empty-list">ยังไม่มีรายการอาหารที่สั่ง</div>) : (<div onClick={this.handleConfirmOrder} className="confirm-order-button">ส่งรายการ</div>)
+            (this.state.order.length === 0) ? (<div className="empty-list">ยังไม่มีรายการอาหารที่สั่ง</div>) : (!this.state.forceHideConfirmButton && <div onClick={this.handleConfirmOrder} className="confirm-order-button">ส่งรายการ</div>)
           }
         </div>
       </div>
